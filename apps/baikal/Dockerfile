@@ -1,16 +1,24 @@
 # Multi-stage build, see https://docs.docker.com/develop/develop-images/multistage-build/
-FROM ghcr.io/onedr0p/alpine:rolling@sha256:0e3067295cc20dafbd4cf63789ccc71858ad555f3998200ca10b271328c7285e
+FROM ghcr.io/onedr0p/alpine:rolling@sha256:0e3067295cc20dafbd4cf63789ccc71858ad555f3998200ca10b271328c7285e as builder
 
-ENV VERSION 0.9.4
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETOS
+ARG VERSION
+
+LABEL dev.bjw-s.image.target_platform=$TARGETPLATFORM
+LABEL dev.bjw-s.image.target_architecture=$TARGETARCH
+LABEL dev.bjw-s.image.target_os=$TARGETOS
+LABEL org.opencontainers.image.source="https://github.com/sabre-io/Baikal"
 
 ADD https://github.com/sabre-io/Baikal/releases/download/${VERSION}/baikal-${VERSION}.zip .
-RUN apk add unzip && unzip -q baikal-${VERSION}.zip
+RUN apk add unzip && unzip -q baikal-${VERSION}.zip && pwd && ls -al
 
 # Final Docker image
 FROM docker.io/library/php:8.2-apache
 
 # Install Baikal and required dependencies
-COPY --from=builder --chown=www-data:www-data baikal /var/www/baikal
+COPY --from=builder --chown=www-data:www-data /app/baikal /var/www/baikal
 RUN apt-get update            &&\
     apt-get install -y          \
     libcurl4-openssl-dev      \
@@ -20,10 +28,11 @@ RUN apt-get update            &&\
 
 # Configure Apache + HTTPS
 COPY apache.conf /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i 's/Listen 80/Listen 8000/g' /etc/apache2/ports.conf
 RUN a2enmod rewrite
 
 # Expose HTTPS & data directory
-EXPOSE 80
+EXPOSE 8000
 VOLUME /var/www/baikal/config
 VOLUME /var/www/baikal/Specific
 
