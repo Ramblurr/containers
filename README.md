@@ -41,7 +41,8 @@ Application Images are all built from the customer base images below, and will l
 
 Container | Channel | Image | Latest Tags
 --- | --- | --- | ---
-[baikal]() | stable | ghcr.io/ramblurr/baikal |
+[baikal](https://github.com/Ramblurr/containers/pkgs/container/baikal) | stable | ghcr.io/ramblurr/baikal |![0.9.4](https://img.shields.io/badge/0.9.4-blue?style=flat-square) ![latest](https://img.shields.io/badge/latest-green?style=flat-square)
+[davis](https://github.com/Ramblurr/containers/pkgs/container/davis) | stable | ghcr.io/ramblurr/davis |![4.4.1](https://img.shields.io/badge/4.4.1-blue?style=flat-square) ![latest](https://img.shields.io/badge/latest-green?style=flat-square)
 
 
 ### Base Images
