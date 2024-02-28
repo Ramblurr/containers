@@ -40,3 +40,6 @@ jobs:
       - build-images
     uses: ./.github/workflows/workflow_call-render-readme.yaml
     secrets: inherit
+    permissions:
+      contents: write
+      packages: write
