@@ -71,15 +71,12 @@ RUN apk --update --virtual build-deps-imap add --no-cache imap-dev openssl-dev k
     && rm -rf /tmp/*
 
 # rootless nginx
-RUN apk add --no-cache nginx && \
-    apk add --no-cache tzdata
+RUN apk add --no-cache nginx nginx-mod-http-lua tzdata
 
-ADD ./nginx.conf /etc/nginx/http.d/default.conf
+COPY ./vhost.conf /etc/nginx/http.d/default.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-RUN    sed -i 's,listen       80;,listen       8080;,' /etc/nginx/http.d/default.conf \
-    && sed -i 's,user nginx;,pid /tmp/nginx.pid;,' /etc/nginx/nginx.conf \
-    && sed -i "/^http {/a \    proxy_temp_path /tmp/proxy_temp;\n    client_body_temp_path /tmp/client_temp;\n    fastcgi_temp_path /tmp/fastcgi_temp;\n    uwsgi_temp_path /tmp/uwsgi_temp;\n    scgi_temp_path /tmp/scgi_temp;\n" /etc/nginx/nginx.conf \
-    && ln -sf /dev/stdout /var/log/nginx/access.log \
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && mkdir -p /var/lib/nginx/logs \
     && ln -sf /dev/stderr /var/lib/nginx/logs/error.log \
@@ -88,29 +85,19 @@ RUN    sed -i 's,listen       80;,listen       8080;,' /etc/nginx/http.d/default
 
 # Davis installation
 RUN mkdir /var/www/davis \
-  && apk add --no-cache --virtual=.build-deps git \
+  && apk add --no-cache --virtual=.build-deps git composer \
+  && apk add --no-cache php82-ctype php82-gd php82-tokenizer php82-dom php82-xml phpunit php82-simplexml php82-xmlreader php82-session \
   && git clone https://github.com/tchapi/davis /var/www/davis \
-  && apk del --purge .build-deps \
-  && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
   && cd /var/www/davis \
+  && git reset --hard ${VERSION} \
+  && composer update --no-interaction --with-all-dependencies \
   && APP_ENV=prod COMPOSER_ALLOW_SUPERUSER=1 composer install --no-ansi --no-dev --no-interaction --no-progress --optimize-autoloader \
   && chown -R root:root /var/www/davis \
-  && chmod -R 755 /var/www/davis
+  && chmod -R 755 /var/www/davis \
+  && apk del --purge .build-deps \
+  && docker-php-source delete
 
 WORKDIR /var/www/davis
-
-# PHP-FPM healthcheck
-RUN set -xe && echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
-RUN curl https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/v0.5.0/php-fpm-healthcheck \
-    -o /usr/local/bin/php-fpm-healthcheck -s \
-    && chmod +x /usr/local/bin/php-fpm-healthcheck
-
-# Cleanup (only useful when using --squash)
-RUN docker-php-source delete
-RUN rm -rf /usr/local/bin/composer
-
-HEALTHCHECK --interval=30s --timeout=1s CMD php-fpm-healthcheck || exit 1
-
 
 COPY ./davis-entrypoint.sh /davis-entrypoint.sh
 
@@ -119,3 +106,5 @@ ENTRYPOINT ["/davis-entrypoint.sh"]
 ENV DATABASE_DRIVER=sqlite
 ENV DATABASE_URL=sqlite:////tmp/davis-database.db
 ENV APP_ENV=prod
+ENV DAVIS_SERVER_NAME=changeme.com
+ENV DAVIS_UPSTREAM=127.0.0.1:9000

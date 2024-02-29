@@ -10,7 +10,7 @@ URL = "https://api.github.com/repos/tchapi/davis/releases/latest"
 def get_latest(channel):
     r = requests.get(URL)
     data = json.loads(r.text)
-    version = data['tag_name'].removeprefix("v")
+    version = data['tag_name']
     return version
 
 if __name__ == "__main__":
