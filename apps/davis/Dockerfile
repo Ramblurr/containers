@@ -70,19 +70,6 @@ RUN apk --update --virtual build-deps-imap add --no-cache imap-dev openssl-dev k
     && apk del build-deps-imap \
     && rm -rf /tmp/*
 
-# rootless nginx
-RUN apk add --no-cache nginx nginx-mod-http-lua tzdata
-
-COPY ./vhost.conf /etc/nginx/http.d/default.conf
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log \
-    && mkdir -p /var/lib/nginx/logs \
-    && ln -sf /dev/stderr /var/lib/nginx/logs/error.log \
-    && ln -sf /dev/stdout /var/lib/nginx/logs/access.log \
-    && chmod 755 /var/lib/nginx /etc/nginx
-
 # Davis installation
 RUN mkdir /var/www/davis \
   && apk add --no-cache --virtual=.build-deps git composer \
@@ -98,6 +85,19 @@ RUN mkdir /var/www/davis \
   && docker-php-source delete
 
 WORKDIR /var/www/davis
+
+# rootless nginx
+RUN apk add --no-cache nginx nginx-mod-http-lua tzdata
+
+COPY ./vhost.conf /etc/nginx/http.d/default.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
+    && mkdir -p /var/lib/nginx/logs \
+    && ln -sf /dev/stderr /var/lib/nginx/logs/error.log \
+    && ln -sf /dev/stdout /var/lib/nginx/logs/access.log \
+    && chmod 755 /var/lib/nginx /etc/nginx
 
 COPY ./davis-entrypoint.sh /davis-entrypoint.sh
 
