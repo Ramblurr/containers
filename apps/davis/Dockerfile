@@ -82,6 +82,11 @@ RUN mkdir /var/www/davis \
   && apk del --purge .build-deps \
   && docker-php-source delete
 
+# OPCache + php-fpm tuning
+RUN docker-php-ext-install opcache
+COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+
 WORKDIR /var/www/davis
 
 # Non-root nginx
@@ -127,3 +132,7 @@ ENV DATABASE_URL=sqlite:////tmp/davis-database.db
 ENV APP_ENV=prod
 ENV DAVIS_SERVER_NAME=changeme.com
 ENV DAVIS_UPSTREAM=127.0.0.1:9000
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="1" \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES="20000" \
+    PHP_OPCACHE_MEMORY_CONSUMPTION="256" \
+    PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
