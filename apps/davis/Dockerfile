@@ -5,7 +5,8 @@ ARG fpm_user=82:82
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETOS
-ENV FPM_USER=${fpm_user}
+ENV UMASK="0002" \
+    TZ="Etc/UTC"
 
 LABEL org.opencontainers.image.authors="github.com/ramblurr"
 LABEL org.opencontainers.image.url="https://github.com/ramblurr/containers"
@@ -79,8 +80,6 @@ RUN mkdir /var/www/davis \
   && git reset --hard ${VERSION} \
   && composer update --no-interaction --with-all-dependencies \
   && APP_ENV=prod COMPOSER_ALLOW_SUPERUSER=1 composer install --no-ansi --no-dev --no-interaction --no-progress --optimize-autoloader \
-  && chown -R root:root /var/www/davis \
-  && chmod -R 755 /var/www/davis \
   && apk del --purge .build-deps \
   && docker-php-source delete
 
@@ -99,9 +98,31 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stdout /var/lib/nginx/logs/access.log \
     && chmod 755 /var/lib/nginx /etc/nginx
 
+# Rootless
+#hadolint ignore=DL3018
+RUN apk add --no-cache \
+        ca-certificates catatonit bash \
+        bind-tools coreutils curl iputils \
+        jq moreutils nano  \
+        util-linux wget \
+    && addgroup -S kah --gid 568 \
+    && adduser -S kah -G kah --uid 568 \
+    && chown -R root:root /var/www/davis /var/lib/nginx /etc/nginx \
+    && chmod -R 775 /var/www/davis /var/lib/nginx /etc/nginx \
+    && rm -rf /var/www/davis/var \
+    && mkdir /var/www/davis/var /data \
+    && chown -R kah:kah /var/www/davis/var /data \
+    && chmod -R 775 /var/www/davis/var /data  \
+    && printf "umask %d\n" "${UMASK}" > /etc/profile.d/umask.sh \
+    && rm -rf /tmp/*
+
+VOLUME ["/var/www/davis/var"]
+VOLUME ["/data"]
+USER kah
 COPY ./davis-entrypoint.sh /davis-entrypoint.sh
 
-ENTRYPOINT ["/davis-entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/catatonit", "--", "/davis-entrypoint.sh"]
+CMD ["davis"]
 
 ENV DATABASE_DRIVER=sqlite
 ENV DATABASE_URL=sqlite:////tmp/davis-database.db

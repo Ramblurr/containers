@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+export APP_TIMEZONE=${APP_TIMEZONE:-${TZ}}
+
 if [ "$1" = "nginx" ]; then
     echo "Starting Nginx..."
     exec nginx -g 'daemon off;'
