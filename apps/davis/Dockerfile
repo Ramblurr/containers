@@ -1,7 +1,6 @@
 FROM php:8.2-fpm-alpine
 
 # https://github.com/docker-library/php/blob/master/8.2/alpine3.18/fpm/Dockerfile#L33
-ARG fpm_user=82:82
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETOS
@@ -85,7 +84,7 @@ RUN mkdir /var/www/davis \
 
 WORKDIR /var/www/davis
 
-# rootless nginx
+# Non-root nginx
 RUN apk add --no-cache nginx nginx-mod-http-lua tzdata
 
 COPY ./vhost.conf /etc/nginx/http.d/default.conf
@@ -95,10 +94,9 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
     && mkdir -p /var/lib/nginx/logs \
     && ln -sf /dev/stderr /var/lib/nginx/logs/error.log \
-    && ln -sf /dev/stdout /var/lib/nginx/logs/access.log \
-    && chmod 755 /var/lib/nginx /etc/nginx
+    && ln -sf /dev/stdout /var/lib/nginx/logs/access.log
 
-# Rootless
+# Non-root user
 #hadolint ignore=DL3018
 RUN apk add --no-cache \
         ca-certificates catatonit bash \
