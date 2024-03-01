@@ -48,3 +48,10 @@ ENV	ROON_ID_DIR	/data
 WORKDIR	${ROOTPATH}
 VOLUME	/data
 CMD	["/roon-entrypoint.sh"]
+LABEL	org.opencontainers.image.authors="github.com/ramblurr"
+LABEL	org.opencontainers.image.url="https://github.com/ramblurr/containers"
+LABEL	org.opencontainers.image.description="The music player for music lovers"
+LABEL	org.opencontainers.image.source="https://github.com/ramblurr/containers"
+LABEL	dev.bjw-s.image.target_platform=$TARGETPLATFORM
+LABEL	dev.bjw-s.image.target_architecture=$TARGETARCH
+LABEL	dev.bjw-s.image.target_os=$TARGETOS
