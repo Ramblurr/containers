@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#shellcheck disable=SC1091
+test -f "/scripts/umask.sh" && source "/scripts/umask.sh"
+
+SCRIPT=RoonAppliance
+export DOTNET_ROOT="$ROOTPATH/RoonDotnet"
+export PATH=$DOTNET_ROOT:"$PATH"
+#export LD_LIBRARY_PATH="$DOTNET_ROOT/lib:$LD_LIBRARY_PATH"
+export FONTCONFIG_PATH=$MONO_DIR/etc/fonts
+#export MONO_DEBUG=no-gdb-backtrace
+#export MONO_GC_PARAMS=major=marksweep-conc,nursery-size=16m
+#export MONO_TLS_PROVIDER=btls
+#export MONO_ENABLE_BLOCKING_TRANSITION=1
+
+ulimit -n 8192
+cd "$ROOTPATH/Appliance"
+exec ${DOTNET_ROOT}/dotnet ${ROOTPATH}/Appliance/${SCRIPT}.dll "$@"
