@@ -108,7 +108,7 @@ Each Image will be built with a `rolling` tag, along with tags specific to it's 
 
 Container | Channel | Image
 --- | --- | ---
-[datomic-pro](https://github.com/users/Ramblurr/packages/container/package/datomic-pro) | stable | ghcr.io/ramblurr/datomic-pro
+[datomic-pro](https://github.com/Ramblurr/containers/pkgs/container/datomic-pro) | stable | ghcr.io/Ramblurr/datomic-pro
 
 
 ## Deprecations
