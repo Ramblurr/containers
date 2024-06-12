@@ -1,35 +1,48 @@
 # datomic
 
-This image provides a quick and easy way to start [Datomic Pro or Datomic Console][datomic]
+🐋 This container image provides a quick and easy way to start [Datomic Pro or Datomic Console][datomic]
 
-[datomic](https://docs.datomic.com/releases-pro.html)
+> ❄ Looking for a Nix package or NixOS module? Check out my other repo [ramblurr/datomic-pro-flake](https://github.com/Ramblurr/datomic-pro-flake).
 
-### Volumes
+[datomic]: https://docs.datomic.com/releases-pro.html
 
-* `/config` - (optional) where you can mount your own transactor properties or boot edn
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
 
-### Transactor Mode
+- [datomic](#datomic)
+    - [Transactor Mode](#transactor-mode)
+        - [-](#-)
+    - [Console Mode](#console-mode)
+        - [-](#--1)
+    - [Example Compose](#example-compose)
+        - [Datomic Pro with Local Storage](#datomic-pro-with-local-storage)
+        - [Datomic Pro with Postgres Storage and memcached](#datomic-pro-with-postgres-storage-and-memcached)
+    - [``` yaml](#-yaml)
+    - [License](#license)
+
+<!-- markdown-toc end -->
+
+
+## Transactor Mode
 
 Runs a Datomic Transactor. This is the default mode when the container is run with no command.
 
-The default port is `4334`.
+* The default port is `4334`.
+* A rw volume of `/config` is required.
+* Configure with env vars (see below) or add `/config/transactor.properties` to supply a config to the transactor.
+* A rw volume of `/data` is optional (for use in H2 mode).
 
-A rw volume of `/config` is required.
+#### Env vars
 
-Configure with env vars (see below) or add `/config/transactor.properties` to supply a config to the transactor.
-
-A rw volume of `/data` is optional (for use in H2 mode).
-
-**Env vars:**
-
-Note: all env vars can be passed with `_FILE` to read the value from a file
-(e.g, when using secrets). Example: `DATOMIC_STORAGE_ADMIN_PASSWORD` can be
-passed as `DATOMIC_STORAGE_ADMIN_PASSWORD_FILE=/run/secrets/admin-password` and
-the value from that file will be used as the admin password.
+> [!IMPORTANT]
+> All env vars can be passed with `_FILE` to read the value from a file
+> (e.g, when using secrets). Example: `DATOMIC_STORAGE_ADMIN_PASSWORD` can be
+> passed as `DATOMIC_STORAGE_ADMIN_PASSWORD_FILE=/run/secrets/admin-password` and
+> the value from that file will be used as the admin password.
 
 * `DATOMIC_TRANSACTOR_PROPERTIES_PATH` - The path to the properties file for the transactor. Defaults to `/config/transactor.properties`
 
-The following environment vars configure the properties, refer to the datomic documentation for more information:
+The following environment vars configure the properties, refer to the Datomic documentation for more information:
 
 * `DATOMIC_ALT_HOST` - `alt-host`
 * `DATOMIC_DATA_DIR` - `data-dir` (default: /data)
@@ -60,15 +73,14 @@ The following environment vars configure the properties, refer to the datomic do
 * `DATOMIC_VALCACHE_PATH` - `valcache-path`
 * `DATOMIC_WRITE_CONCURRENCY` - `write-concurrency`
 
-### Console Mode
+## Console Mode
 
 Runs the Datomic Console.
 
-Run this mode by passing the `console` as the first and only argument to the container.
+* Run this mode by passing the `console` as the first and only argument to the container.
+* The default port is `8080`.
 
-The default port is `8080`.
-
-**Env vars:**
+#### Env vars
 
 * `DB_URI` - the database connection URI that console uses to connect to datomic
 * `DB_URI_FILE` - will read the connection URI from the file specified by this env var
