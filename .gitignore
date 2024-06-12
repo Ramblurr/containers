@@ -6,3 +6,6 @@ __pycache__/
 .goss
 .private
 .direnv
+
+.clj-kondo
+.lsp

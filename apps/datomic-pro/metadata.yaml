@@ -1,0 +1,10 @@
+---
+app: datomic-pro
+channels:
+  - name: stable
+    platforms: ["linux/amd64"]
+    stable: true
+    tests:
+      enabled: false
+      type: cli
+      extra_args: "--env DATOMIC_PASSWORD=foo"

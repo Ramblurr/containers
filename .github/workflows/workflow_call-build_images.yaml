@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Python Requirements
         run: |
-          pip install -r ./.ci/scripts/requirements.txt && pip freeze
+          pip install -r ./.github/scripts/requirements.txt && pip freeze
 
       - name: Prepare Matrices
         id: prepare-matrices
@@ -57,12 +57,12 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ -z "${{ inputs.appsToBuild }}" ]]; then
-              matrices=$(python ./.ci/scripts/prepare-matrices.py "all" "${{ inputs.pushImages }}" "${{ inputs.force }}")
+              matrices=$(python ./.github/scripts/prepare-matrices.py "all" "${{ inputs.pushImages }}" "${{ inputs.force }}")
           else
             if [[ -z "${{ inputs.channelsToBuild }}" ]]; then
-              matrices=$(python ./.ci/scripts/prepare-matrices.py "${{ inputs.appsToBuild }}" "${{ inputs.pushImages }}" "${{ inputs.force }}")
+              matrices=$(python ./.github/scripts/prepare-matrices.py "${{ inputs.appsToBuild }}" "${{ inputs.pushImages }}" "${{ inputs.force }}")
             else
-              matrices=$(python ./.ci/scripts/prepare-matrices.py "${{ inputs.appsToBuild }}" "${{ inputs.pushImages }}" "${{ inputs.force }}" "${{ inputs.channelsToBuild }}")
+              matrices=$(python ./.github/scripts/prepare-matrices.py "${{ inputs.appsToBuild }}" "${{ inputs.pushImages }}" "${{ inputs.force }}" "${{ inputs.channelsToBuild }}")
             fi
           fi
           echo "matrices=${matrices}" >> $GITHUB_OUTPUT

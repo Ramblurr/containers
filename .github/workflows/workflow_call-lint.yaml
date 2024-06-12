@@ -40,7 +40,7 @@ jobs:
           yamllint_file_or_dir: "${{ steps.filter.outputs.yaml_files }}"
           yamllint_strict: false
           yamllint_comment: true
-          yamllint_config_filepath: .ci/lint/yamllint.yaml
+          yamllint_config_filepath: .github/lint/yamllint.yaml
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -57,7 +57,7 @@ jobs:
           filters: |
             cue:
               - added|modified: "apps/**/metadata.yaml"
-              - added|modified: ".ci/lint/metadata.rules.cue"
+              - added|modified: ".github/lint/metadata.rules.cue"
 
       - name: Setup CUE
         if: ${{ steps.filter.outputs.cue == 'true' }}
@@ -68,7 +68,7 @@ jobs:
         shell: bash
         # Run against all files to ensure they are tested if the cue schema is changed.
         run: |
-          find ./apps/ -name metadata.json | xargs -I {} cue vet --schema '#Spec' {} ./.ci/lint/metadata.rules.cue
+          find ./apps/ -name metadata.json | xargs -I {} cue vet --schema '#Spec' {} ./.github/lint/metadata.rules.cue
 
   renovate-config-validator:
     name: Validate Renovate Config

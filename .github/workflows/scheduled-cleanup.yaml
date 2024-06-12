@@ -7,7 +7,6 @@ on:
     - cron: "0 4 * * 1"
 
 permissions:
-  packages: write
   packages: delete
 
 jobs:

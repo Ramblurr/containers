@@ -21,5 +21,5 @@ repos:
     hooks:
       - args:
           - --config-file
-          - .ci/lint/yamllint.yaml
+          - .github/lint/yamllint.yaml
         id: yamllint

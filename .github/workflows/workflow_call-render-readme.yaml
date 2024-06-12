@@ -38,13 +38,13 @@ jobs:
 
       - name: Install Python Requirements
         run: |
-          pip install -r ./.ci/scripts/requirements.txt && pip freeze
+          pip install -r ./.github/scripts/requirements.txt && pip freeze
 
       - name: Render README
         env:
           GITHUB_TOKEN: "${{ steps.app-token.outputs.token }}"
         run: |
-          python ./.ci/scripts/render-readme.py
+          python ./.github/scripts/render-readme.py
 
       - name: Commit Changes
         uses: planetscale/ghcommit-action@v0.1.33
