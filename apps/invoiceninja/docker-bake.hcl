@@ -5,6 +5,10 @@ variable "VERSION" {
   default = "v5.11.62"
 }
 
+variable "PHP" {
+  default = "8.3"
+}
+
 group "default" {
   targets = ["image-local"]
 }
@@ -13,7 +17,7 @@ target "image" {
   inherits = ["docker-metadata-action"]
   args = {
     VERSION = "${VERSION}"
-    PHP = "8.3"
+    PHP = "${PHP}"
   }
   labels = {
     "org.opencontainers.image.source" = "https://github.com/invoiceninja/invoiceninja"

@@ -1,6 +1,6 @@
 ARG VERSION
 ARG PHP
-FROM php:${PHP}-fpm AS prepare-app
+FROM docker.io/library/php:${PHP}-fpm AS prepare-app
 ARG VERSION
 ARG TARGETOS
 ARG TARGETARCH
@@ -18,7 +18,7 @@ RUN curl -sL "https://github.com/invoiceninja/invoiceninja/releases/${VERSION}/d
 # ==================
 # InvoiceNinja image
 # ==================
-FROM php:${PHP}-fpm
+FROM docker.io/library/php:${PHP}-fpm
 
 # PHP modules
 ARG php_require="bcmath gd mbstring pdo_mysql zip"
