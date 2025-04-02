@@ -13,6 +13,8 @@ if [ "--help" = "$1" ]; then
     echo
     echo Examples:
     echo docker run ramblurr/invoiceninja-octane:5 app
+    echo docker run ramblurr/invoiceninja-octane:5 app --port=8080 --workers=2
+    echo docker run ramblurr/invoiceninja-octane:5 frankenphp php-cli artisan help
     echo docker run ramblurr/invoiceninja-octane:5 worker --verbose --sleep=3 --tries=3 --max-time=3600
     echo docker run ramblurr/invoiceninja-octane:5 scheduler
     echo
