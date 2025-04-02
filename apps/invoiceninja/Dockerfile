@@ -79,7 +79,7 @@ COPY --from=prepare-app /var/www/html /var/www/html
 COPY --from=prepare-app /tmp/public /tmp/public
 
 # Add initialization script
-COPY --chmod=0755 defualts/scripts/init.sh /usr/local/bin/init.sh
+COPY --chmod=0755 defaults/scripts/init.sh /usr/local/bin/init.sh
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
