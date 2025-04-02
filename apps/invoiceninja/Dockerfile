@@ -8,7 +8,7 @@ ARG TARGETVARIANT=""
 ARG TARGETPLATFORM
 ARG PHP
 USER www-data
-RUN curl -sL "https://github.com/invoiceninja/invoiceninja/releases/${VERSION}/download/invoiceninja.tar.gz" | \
+RUN curl -sL "https://github.com/invoiceninja/invoiceninja/releases/download/${VERSION}/invoiceninja.tar.gz" | \
     tar -xz -C /var/www/html \
     && ln -s /var/www/html/resources/views/react/index.blade.php /var/www/html/public/index.html \
     && php artisan storage:link \
