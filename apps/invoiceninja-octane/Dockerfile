@@ -14,7 +14,7 @@ ARG VERSION
 RUN if [ "${VERSION}" = "latest" ]; then \
         url="https://github.com/invoiceninja/invoiceninja/releases/latest/download/invoiceninja.tar.gz"; \
     else \
-        url="https://github.com/invoiceninja/invoiceninja/releases/download/v${VERSION}/invoiceninja.tar.gz"; \
+        url="https://github.com/invoiceninja/invoiceninja/releases/download/${VERSION}/invoiceninja.tar.gz"; \
     fi \
     && curl -sL "${url}" | \
     tar -xz \
