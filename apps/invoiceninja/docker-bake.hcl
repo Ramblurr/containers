@@ -13,6 +13,7 @@ target "image" {
   inherits = ["docker-metadata-action"]
   args = {
     VERSION = "${VERSION}"
+    PHP = "8.3"
   }
   labels = {
     "org.opencontainers.image.source" = "https://github.com/invoiceninja/invoiceninja"

@@ -1,16 +1,13 @@
 ARG VERSION
+ARG PHP
 FROM php:${PHP}-fpm AS prepare-app
 ARG VERSION
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT=""
 ARG TARGETPLATFORM
-
-ARG PHP=8.3
-
-
+ARG PHP
 USER www-data
-
 RUN curl -sL "https://github.com/invoiceninja/invoiceninja/releases/${VERSION}/download/invoiceninja.tar.gz" | \
     tar -xz -C /var/www/html \
     && ln -s /var/www/html/resources/views/react/index.blade.php /var/www/html/public/index.html \
