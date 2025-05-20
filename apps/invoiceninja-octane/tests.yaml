@@ -7,8 +7,8 @@ fileExistenceTests:
   - name: init.sh
     path: /usr/local/bin/init.sh
     shouldExist: true
-#commandTests:
-#  - name: "app"
-#    setup: [["/usr/local/bin/init.sh"]]
-#    command: "app"
-#    expectedOutput: ["/env/bin/gunicorn"]
+commandTests:
+  - name: "app"
+    setup: [["/usr/local/bin/init.sh"]]
+    command: "app"
+    expectedOutput: [".*Connection refused.*"]

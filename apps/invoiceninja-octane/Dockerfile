@@ -90,6 +90,7 @@ USER ${user}
 ENV FILESYSTEM_DISK=debian_docker
 ENV IS_DOCKER=true
 ENV SNAPPDF_CHROMIUM_PATH=/usr/bin/chromium
+ENV APP_ENV=production
 
 # Add healthchecks
 HEALTHCHECK --start-period=10s CMD \
