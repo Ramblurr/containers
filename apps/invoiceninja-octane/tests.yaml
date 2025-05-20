@@ -1,9 +1,14 @@
 ---
 schemaVersion: "2.0.0"
 fileExistenceTests:
-  - name: manager
-    path: /manager
+  - name: chromium
+    path: /usr/bin/chromium
     shouldExist: true
-  - name: restic
-    path: /usr/local/bin/restic
+  - name: init.sh
+    path: /usr/local/bin/init.sh
     shouldExist: true
+#commandTests:
+#  - name: "app"
+#    setup: [["/usr/local/bin/init.sh"]]
+#    command: "app"
+#    expectedOutput: ["/env/bin/gunicorn"]
