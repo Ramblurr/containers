@@ -1,5 +1,7 @@
 #!/bin/sh -eu
 
+set -x
+
 if [ "--help" = "$1" ]; then
     echo [COMMAND] [FLAGS]
     echo The container can be run with different roles by specifying a command
