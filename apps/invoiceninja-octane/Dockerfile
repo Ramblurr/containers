@@ -30,14 +30,16 @@ RUN if [ "${VERSION}" = "latest" ]; then \
 FROM docker.io/dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-${DEBIAN_VERSION}
 
 ARG user=ninja
+ARG cuid=3015
+ARG cgid=3015
 
 # PHP modules
 ARG php_require="bcmath gd mbstring pdo_mysql zip"
 ARG php_suggest="exif imagick intl pcntl soap saxon-12.5.0"
 ARG php_extra="opcache"
 
-# Create a system user UID/GID=999
-RUN useradd -r ${user}
+RUN groupadd -r -g ${cgid} ${user} && \
+    useradd -r -u ${cuid} -g ${cgid} ${user}
 
 # Allow to bind to privileged ports
 RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp
