@@ -5,7 +5,7 @@ ARG TARGETVARIANT=""
 ARG TARGETPLATFORM
 
 # Build stage
-FROM rust:1.82 AS builder
+FROM rust:1.91 AS builder
 
 WORKDIR /build
 
