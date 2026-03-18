@@ -2,7 +2,7 @@ target "docker-metadata-action" {}
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=invoiceninja/invoiceninja
-  default = "v5.13.1"
+  default = "v5.13.2"
 }
 
 group "default" {
