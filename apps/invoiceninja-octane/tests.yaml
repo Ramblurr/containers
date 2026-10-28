@@ -8,6 +8,13 @@ fileExistenceTests:
     path: /usr/local/bin/init.sh
     shouldExist: true
 commandTests:
+  - name: "FrankenPHP uses patched PHP 8.4"
+    command: "/usr/local/bin/frankenphp"
+    args:
+      - php-cli
+      - -r
+      - 'echo PHP_VERSION, PHP_EOL; exit(PHP_VERSION_ID >= 80427 && PHP_VERSION_ID < 80500 ? 0 : 1);'
+    exitCode: 0
   - name: "app"
     setup: [["/usr/local/bin/init.sh"]]
     command: "app"

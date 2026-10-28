@@ -3,11 +3,9 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT=""
 ARG TARGETPLATFORM
-ARG PHP_VERSION=8.4
-ARG FRANKENPHP_VERSION=1
-ARG DEBIAN_VERSION=bookworm
+FROM docker.io/dunglas/frankenphp:1-php8.4-trixie AS base
 
-FROM docker.io/dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-${DEBIAN_VERSION} AS prepare-app
+FROM base AS prepare-app
 
 ARG VERSION
 
@@ -27,7 +25,7 @@ RUN if [ "${VERSION}" = "latest" ]; then \
 # ==================
 # InvoiceNinja image
 # ==================
-FROM docker.io/dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-${DEBIAN_VERSION}
+FROM base
 
 ARG user=ninja
 ARG cuid=3015
@@ -35,7 +33,8 @@ ARG cgid=3015
 
 # PHP modules
 ARG php_require="bcmath gd mbstring pdo_mysql zip"
-ARG php_suggest="exif imagick intl pcntl soap saxon-12.5.0"
+# Fetch the Imagick release from GitHub because PECL is unavailable.
+ARG php_suggest="exif imagick/imagick@3.8.1 intl pcntl soap saxon"
 ARG php_extra="opcache"
 
 RUN groupadd -r -g ${cgid} ${user} && \
@@ -62,7 +61,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN install-php-extensions \
+RUN IPE_SAXON_EDITION=HE install-php-extensions \
     ${php_require} \
     ${php_suggest} \
     ${php_extra}
